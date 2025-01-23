@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Grid2 from "@mui/material/Grid2";
 import {
   Typography,
@@ -40,8 +40,6 @@ export async function getServerSideProps(context: any) {
       query: GET_EMPLOYEES_ON_LEAVE,
       variables: { department },
     });
-
-    console.log("=====================>", data);
 
     return {
       props: {
@@ -97,7 +95,6 @@ export default function EmployeesOnLeave({
   const handleFilterChange = (event: any) => {
     const selectedDepartment = event.target.value as string;
 
-    // Update the URL query parameter and trigger a page reload
     router.push({
       pathname: "/employees-on-leave",
       query: selectedDepartment ? { department: selectedDepartment } : {},
