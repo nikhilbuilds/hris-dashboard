@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, Grid2, Typography } from "@mui/material";
 import { gql } from "@apollo/client";
-import { getClient } from "@/pages/lib/graphql/apollo-client";
+import { getClient } from "@/lib/graphql/apollo-client";
 
 const GET_TEAM_OVERVIEW = gql`
   query TeamOverview {

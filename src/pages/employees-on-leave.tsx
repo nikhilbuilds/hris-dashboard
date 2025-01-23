@@ -14,8 +14,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import { gql } from "@apollo/client";
-import { getClient } from "@/pages/lib/graphql/apollo-client";
-import { exportToCSV } from "./lib/utils/exportCsv";
+import { getClient } from "@/lib/graphql/apollo-client";
+import { exportToCSV } from "../lib/utils/exportCsv";
 import { useRouter } from "next/router";
 
 const GET_EMPLOYEES_ON_LEAVE = gql`

@@ -12,9 +12,9 @@ import {
   Button,
 } from "@mui/material";
 import { gql } from "@apollo/client";
-import { getClient } from "@/pages/lib/graphql/apollo-client";
+import { getClient } from "@/lib/graphql/apollo-client";
 import moment from "moment";
-import { exportToCSV } from "./lib/utils/exportCsv";
+import { exportToCSV } from "../lib/utils/exportCsv";
 
 const GET_BIRTHDAYS_THIS_WEEK = gql`
   query BirthdaysThisWeek {
