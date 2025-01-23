@@ -1,16 +1,22 @@
 import React from "react";
 import {
   Box,
+  Button,
   CssBaseline,
   Drawer,
   List,
   ListItem,
+  ListItemButton,
+  ListItemIcon,
   ListItemText,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
+import Diversity3Icon from "@mui/icons-material/Diversity3";
+import CakeIcon from "@mui/icons-material/Cake";
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 
-const drawerWidth = 50;
+const drawerWidth = 60;
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,9 +24,13 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const menuItems = [
-    { text: "Team Overview", path: "/team-overview" },
-    { text: "Employees on Leave", path: "/employees-on-leave" },
-    { text: "Birthdays", path: "/birthdays" },
+    { icon: <Diversity3Icon />, text: "Team Overview", path: "/team-overview" },
+    {
+      icon: <PauseCircleOutlineIcon />,
+      text: "Employees on Leave",
+      path: "/employees-on-leave",
+    },
+    { icon: <CakeIcon />, text: "Birthdays", path: "/birthdays" },
   ];
 
   return (
@@ -33,35 +43,40 @@ export default function Layout({ children }: LayoutProps) {
           width: 240,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: 240,
+            width: 250,
             boxSizing: "border-box",
             backgroundColor: "#f4f4f4",
             borderRight: "1px solid #ddd",
           },
         }}
       >
-        <Typography
-          variant="h6"
-          align="center"
-          sx={{ padding: "16px", fontWeight: "bold", color: "#333" }}
-        >
-          HRIS Dashboard
-        </Typography>
+        <Link href={"/"} passHref style={{ textDecoration: "none" }}>
+          <Typography
+            variant="h6"
+            align="center"
+            sx={{ padding: "16px", fontWeight: "bold", color: "#24212175" }}
+          >
+            HRIS Dashboard{" "}
+          </Typography>
+        </Link>
+
         <List>
           {menuItems.map((item) => (
-            <ListItem key={item.text} sx={{ padding: "10px 16px" }}>
-              <Link href={item.path} passHref>
-                <ListItemText
-                  primary={item.text}
-                  sx={{
-                    color: "#333",
-                    "&:hover": {
-                      color: "#1976d2",
-                    },
-                  }}
-                />
-              </Link>
-            </ListItem>
+            <Link href={item.path} passHref style={{ textDecoration: "none" }}>
+              <ListItemButton
+                key={item.text}
+                sx={{
+                  my: 0,
+                  minHeight: 60,
+                  color: "black",
+                }}
+              >
+                <ListItemIcon sx={{ color: "inherit" }}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </Link>
           ))}
         </List>
       </Drawer>

@@ -3,7 +3,6 @@ import { Card, CardContent, Grid2, Typography } from "@mui/material";
 import { gql } from "@apollo/client";
 import { getClient } from "@/pages/lib/graphql/apollo-client";
 
-// GraphQL Query
 const GET_TEAM_OVERVIEW = gql`
   query TeamOverview {
     teamOverview {
@@ -84,7 +83,7 @@ export default function TeamOverview({ teamStats, error }: DashboardProps) {
               borderRadius: "12px",
               boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
               padding: "16px",
-              backgroundColor: "#1976d2",
+              backgroundColor: "#24212175",
               color: "white",
             }}
           >
