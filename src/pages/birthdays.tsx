@@ -3,7 +3,7 @@ import Grid2 from "@mui/material/Grid2";
 import { gql } from "@apollo/client";
 import { getClient } from "@/lib/graphql/apollo-client";
 import { exportToCSV } from "@/lib/utils/exportCsv";
-import { formatDate } from "@/lib/utils/dateFormatter";
+import { formatBirthday } from "@/lib/utils/dateFormatter";
 import { Birthday } from "@/types/birthday";
 import ErrorMessage from "@/components/ErrorMessage";
 import BirthdaysTable from "@/components/BirthdaysTable";
@@ -31,7 +31,7 @@ export async function getServerSideProps() {
 
     const formattedBirthdays = data.birthdaysThisWeek.map((birthday: any) => ({
       ...birthday,
-      dob: formatDate(birthday.dob),
+      dob: formatBirthday(birthday.dob),
     }));
 
     console.log(formattedBirthdays);

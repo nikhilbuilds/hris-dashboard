@@ -135,9 +135,12 @@ export default function EmployeesOnLeave({
       });
 
       const formattedData = data.employeesOnLeave.employees.map((employee: any) => ({
-        ...employee,
-        leaveStart: formatDate(employee.leaveStart),
-        leaveEnd: formatDate(employee.leaveEnd),
+        "id": employee.id,
+        "name": employee.name,
+        "department": employee.department,
+        "Leave type": employee.leaveType,
+        "Leave start date": formatDate(employee.leaveStart),
+        "Leave end date": formatDate(employee.leaveEnd),
       }));
 
       exportToCSV(formattedData, "employees_on_leave");

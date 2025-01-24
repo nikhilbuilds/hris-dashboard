@@ -8,7 +8,7 @@ export const resolvers = {
     ) => {
       const { page, limit, department } = args;
       const today = new Date();
-      today.setHours(0, 0, 0, 0); 
+      today.setHours(0, 0, 0, 0);
 
       const departmentMap = new Map(departments.map((d) => [d.id, d.name]));
       const employeeMap = new Map(employees.map((e) => [e.id, e]));
@@ -26,7 +26,7 @@ export const resolvers = {
           if (!employee) return;
 
           const departmentName = departmentMap.get(employee.departmentId);
-          
+
           if (department && departmentName !== department) return;
 
           employeesOnLeaveMap.set(employee.id, {
@@ -60,27 +60,35 @@ export const resolvers = {
 
     birthdaysThisWeek: () => {
       const today = new Date();
-      const weekStart = new Date(today);
-      const weekEnd = new Date(today);
+      today.setHours(0, 0, 0, 0);
 
-      weekStart.setDate(today.getDate() - today.getDay());
-      weekEnd.setDate(weekStart.getDate() + 6);
+      const nextWeek = new Date(today);
+      nextWeek.setDate(today.getDate() + 7);
+      nextWeek.setHours(23, 59, 59, 999);
+
+      const currentYear = today.getFullYear();
+
+      const departmentMap = new Map(departments.map((d) => [d.id, d.name]));
 
       return employees
         .filter((employee) => {
           const dob = new Date(employee.dob);
           const birthdayThisYear = new Date(
-            today.getFullYear(),
+            currentYear,
             dob.getMonth(),
             dob.getDate()
           );
-          return birthdayThisYear >= weekStart && birthdayThisYear <= weekEnd;
+
+          if (birthdayThisYear < today) {
+            birthdayThisYear.setFullYear(currentYear + 1);
+          }
+
+          return birthdayThisYear >= today && birthdayThisYear <= nextWeek;
         })
         .map((employee) => ({
           id: employee.id,
           name: employee.name,
-          department: departments.find((d) => d.id === employee.departmentId)
-            ?.name,
+          department: departmentMap.get(employee.departmentId),
           dob: employee.dob,
         }));
     },
