@@ -18,10 +18,13 @@ const StatCard: React.FC<StatCardProps> = ({ title, value }) => {
       }}
     >
       <CardContent>
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: "bold", textAlign: "center" }}
+        >
           {title}
         </Typography>
-        <Typography variant="h4" sx={{ marginTop: "8px" }}>
+        <Typography variant="h4" sx={{ marginTop: "8px", textAlign: "center" }}>
           {value}
         </Typography>
       </CardContent>

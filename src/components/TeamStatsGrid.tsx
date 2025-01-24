@@ -17,14 +17,14 @@ const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({ stats }) => {
   return (
     <Grid2
       container
-      spacing={3}
+      spacing={2}
       sx={{
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "stretch",
       }}
     >
       {statsArray.map((stat) => (
-        <Grid2 key={stat.title}>
+        <Grid2 key={stat.title} size={{ xs: 12, md: 4, sm: 6 }}>
           <StatCard title={stat.title} value={stat.value} />
         </Grid2>
       ))}
