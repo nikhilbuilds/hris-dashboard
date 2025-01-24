@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Box,
@@ -28,8 +28,16 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  console.log(isMobile);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -53,7 +61,7 @@ export default function Layout({ children }: LayoutProps) {
         sx={{
           padding: "16px",
           fontWeight: "bold",
-          color: "#BB86FC", // Accent color
+          color: "#BB86FC",
         }}
       >
         HRIS Dashboard
@@ -72,7 +80,7 @@ export default function Layout({ children }: LayoutProps) {
                 minHeight: 60,
                 color: "white",
                 "&:hover": {
-                  backgroundColor: "#333333", // Hover color
+                  backgroundColor: "#333333",
                 },
               }}
               onClick={handleDrawerToggle}
@@ -89,41 +97,40 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      {/* App Bar */}
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: theme.zIndex.drawer + 1,
-          backgroundColor: "#1E1E1E",
-          color: "white",
-        }}
-      >
-        <Toolbar>
-          {isMobile && (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ marginRight: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Typography variant="h6" noWrap>
-            HRIS Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
-      {/* Sidebar Drawer */}
+      {isMounted && isMobile && (
+        <AppBar
+          position="fixed"
+          sx={{
+            zIndex: theme.zIndex.drawer + 1,
+            backgroundColor: "#1E1E1E",
+            color: "white",
+          }}
+        >
+          <Toolbar>
+            {isMobile && (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ marginRight: 2 }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
+            <Typography variant="h6" noWrap>
+              HRIS Dashboard
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      )}
       <Drawer
         variant={isMobile ? "temporary" : "permanent"}
         anchor="left"
         open={isMobile ? mobileOpen : true}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Improves performance on mobile
+          keepMounted: true,
         }}
         sx={{
           width: drawerWidth,
@@ -131,7 +138,7 @@ export default function Layout({ children }: LayoutProps) {
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
-            backgroundColor: "#1E1E1E", // Sidebar color
+            backgroundColor: "#1E1E1E",
             color: "white",
           },
         }}
@@ -144,12 +151,12 @@ export default function Layout({ children }: LayoutProps) {
         component="main"
         sx={{
           flexGrow: 1,
-          bgcolor: "#121212", // Dark background color for the main area
-          color: "white", // Text color
+          bgcolor: "#121212",
+          color: "white",
 
           paddingTop: 12,
-          paddingX: isMobile ? 1 : 5,
-          minHeight: "100vh", // Ensure it covers the full height
+          paddingX: isMobile ? 2 : 5,
+          minHeight: "100vh",
         }}
       >
         {children}

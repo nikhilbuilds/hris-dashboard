@@ -85,14 +85,14 @@ export default function EmployeesOnLeave({
 
   return (
     <div>
-      <PageHeader title="Employees on Leave Today">
+      <PageHeader title="Employees on leave today">
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#9C27B0", // Purple
+            backgroundColor: "#9C27B0",
             color: "#FFFFFF",
             "&:hover": {
-              backgroundColor: "#7B1FA2", // Darker purple on hover
+              backgroundColor: "#7B1FA2",
             },
           }}
           onClick={handleExport}
