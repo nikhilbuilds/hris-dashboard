@@ -57,7 +57,7 @@ export async function getServerSideProps(context: any) {
     });
 
     const formattedEmployeesOnLeave = data.employeesOnLeave.employees.map(
-      (employee: any) => ({
+      (employee: Employee) => ({
         ...employee,
         leaveStart: formatDate(employee.leaveStart),
         leaveEnd: formatDate(employee.leaveEnd),
@@ -106,12 +106,11 @@ export default function EmployeesOnLeave({
   const client = getClient();
   const { setLoading } = useGlobalLoader();
 
-  if (error) {
-    return <ErrorMessage message={error} />;
-  }
+  if (error) return <ErrorMessage message={error} />;
+  
 
-  const handleFilterChange = (event: any) => {
-    const selectedDepartment = event.target.value as string;
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDepartment = event.target.value;
 
     router.push({
       pathname: "/employees-on-leave",
@@ -138,7 +137,7 @@ export default function EmployeesOnLeave({
       });
 
       const formattedData = data.employeesOnLeave.employees.map(
-        (employee: any) => ({
+        (employee: Employee) => ({
           id: employee.id,
           name: employee.name,
           department: employee.department,

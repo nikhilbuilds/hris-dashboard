@@ -25,9 +25,9 @@ export const resolvers = {
           const employee = employeeMap.get(record.employeeId);
           if (!employee) return;
 
-          const departmentName = departmentMap.get(employee.departmentId);
+        const departmentName = departmentMap.get(employee.departmentId);
 
-          if (department && departmentName !== department) return;
+        if (department && departmentName !== department) return;
 
           employeesOnLeaveMap.set(employee.id, {
             ...employee,

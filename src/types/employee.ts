@@ -6,3 +6,4 @@ export interface Employee {
   leaveStart: string;
   leaveEnd: string;
 }
+

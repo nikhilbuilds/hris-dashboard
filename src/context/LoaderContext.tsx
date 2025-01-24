@@ -22,7 +22,7 @@ export const LoaderProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useGlobalLoader = () => {
   const context = useContext(LoaderContext);
   if (!context) {
-    throw new Error("useGlobalLoader must be used within a LoaderProvider");
+    throw new Error("Something went wrong");
   }
   return context;
 };

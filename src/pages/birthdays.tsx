@@ -30,7 +30,7 @@ export async function getServerSideProps() {
       query: GET_BIRTHDAYS_THIS_WEEK,
     });
 
-    const formattedBirthdays = data.birthdaysThisWeek.map((birthday: any) => ({
+    const formattedBirthdays = data.birthdaysThisWeek.map((birthday: Birthday) => ({
       ...birthday,
       dob: formatBirthday(birthday.dob),
     }));
