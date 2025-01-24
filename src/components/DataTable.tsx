@@ -29,7 +29,11 @@ const DataTable = <T extends Record<string, any>>({
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
-          <TableRow>
+          <TableRow
+            sx={{
+              backgroundColor: "#dbdbdb",
+            }}
+          >
             {columns.map((column) => (
               <TableCell key={column.key}>{column.label}</TableCell>
             ))}

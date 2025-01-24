@@ -146,7 +146,6 @@ export default function Layout({ children }: LayoutProps) {
         {drawerContent}
       </Drawer>
 
-      {/* Main Content */}
       <Box
         component="main"
         sx={{
