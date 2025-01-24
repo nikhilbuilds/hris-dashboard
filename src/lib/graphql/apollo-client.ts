@@ -11,6 +11,5 @@ export const getClient = () => {
       cache: new InMemoryCache(),
     });
   }
-  console.log(`${process.env.GRAPHQL_URI}/api/graphql`);
   return client;
 };

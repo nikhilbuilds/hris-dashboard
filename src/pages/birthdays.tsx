@@ -9,6 +9,7 @@ import ErrorMessage from "@/components/ErrorMessage";
 import BirthdaysTable from "@/components/BirthdaysTable";
 import PageHeader from "@/components/PageHeader";
 import { Button } from "@mui/material";
+import { useGlobalLoader } from "@/context/LoaderContext";
 
 const GET_BIRTHDAYS_THIS_WEEK = gql`
   query BirthdaysThisWeek {
@@ -34,8 +35,6 @@ export async function getServerSideProps() {
       dob: formatBirthday(birthday.dob),
     }));
 
-    console.log(formattedBirthdays);
-
     return {
       props: {
         birthdays: formattedBirthdays,
@@ -59,12 +58,17 @@ interface BirthdaysPageProps {
 }
 
 export default function Birthdays({ birthdays, error }: BirthdaysPageProps) {
-  if (error) {
-    return <ErrorMessage message={error} />;
-  }
+  const { setLoading } = useGlobalLoader();
+
+  if (error) return <ErrorMessage message={error} />;
 
   const handleExport = () => {
-    exportToCSV(birthdays, "birthdays");
+    try {
+      setLoading(true);
+      exportToCSV(birthdays, "birthdays");
+    } finally {
+      setLoading(true);
+    }
   };
 
   return (

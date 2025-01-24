@@ -12,6 +12,7 @@ import FilterSelect from "@/components/FilterSelect";
 import EmployeeTable from "@/components/EmployeeTable";
 import PageHeader from "@/components/PageHeader";
 import { formatDate } from "@/lib/utils/dateFormatter";
+import { useGlobalLoader } from "@/context/LoaderContext";
 
 const GET_EMPLOYEES_ON_LEAVE = gql`
   query EmployeesOnLeave($page: Int, $limit: Int, $department: String) {
@@ -103,6 +104,7 @@ export default function EmployeesOnLeave({
 }: EmployeesOnLeaveProps) {
   const router = useRouter();
   const client = getClient();
+  const { setLoading } = useGlobalLoader();
 
   if (error) {
     return <ErrorMessage message={error} />;
@@ -122,30 +124,35 @@ export default function EmployeesOnLeave({
       pathname: "/employees-on-leave",
       query: {
         department,
-        page: newPage + 1, 
+        page: newPage + 1,
       },
     });
   };
 
   const handleExport = async () => {
     try {
+      setLoading(true);
       const { data } = await client.query({
         query: GET_ALL_EMPLOYEES_ON_LEAVE,
         variables: { department },
       });
 
-      const formattedData = data.employeesOnLeave.employees.map((employee: any) => ({
-        "id": employee.id,
-        "name": employee.name,
-        "department": employee.department,
-        "Leave type": employee.leaveType,
-        "Leave start date": formatDate(employee.leaveStart),
-        "Leave end date": formatDate(employee.leaveEnd),
-      }));
+      const formattedData = data.employeesOnLeave.employees.map(
+        (employee: any) => ({
+          id: employee.id,
+          name: employee.name,
+          department: employee.department,
+          "Leave type": employee.leaveType,
+          "Leave start date": formatDate(employee.leaveStart),
+          "Leave end date": formatDate(employee.leaveEnd),
+        })
+      );
 
       exportToCSV(formattedData, "employees_on_leave");
     } catch (error) {
-      handleError("Error exporting data:")
+      handleError("Error exporting data:");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -174,11 +181,13 @@ export default function EmployeesOnLeave({
       >
         <FilterSelect department={department} onChange={handleFilterChange} />
       </Grid2>
-      <EmployeeTable  employees={employeesOnLeave}
+      <EmployeeTable
+        employees={employeesOnLeave}
         totalCount={totalCount}
         page={currentPage - 1}
         rowsPerPage={10}
-        onPageChange={handlePageChange} />
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }
