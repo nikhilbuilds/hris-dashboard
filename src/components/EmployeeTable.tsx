@@ -9,37 +9,27 @@ import {
   Paper,
 } from "@mui/material";
 import { Employee } from "@/types/employee";
+import DataTable from "./DataTable";
 
 interface EmployeeTableProps {
   employees: Employee[];
 }
 
 const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
+  const columns = [
+    { label: "Name", key: "name" },
+    { label: "Department", key: "department" },
+    { label: "Leave Type", key: "leaveType" },
+    { label: "Start Date", key: "leaveStart" },
+    { label: "End Date", key: "leaveEnd" },
+  ];
+
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Department</TableCell>
-            <TableCell>Leave Type</TableCell>
-            <TableCell>Start Date</TableCell>
-            <TableCell>End Date</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {employees.map((employee) => (
-            <TableRow key={employee.id}>
-              <TableCell>{employee.name}</TableCell>
-              <TableCell>{employee.department}</TableCell>
-              <TableCell>{employee.leaveType}</TableCell>
-              <TableCell>{employee.leaveStart}</TableCell>
-              <TableCell>{employee.leaveEnd}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <DataTable
+      columns={columns}
+      rows={employees}
+      noDataMessage="No employees on leave."
+    />
   );
 };
 
