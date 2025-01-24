@@ -18,7 +18,7 @@ const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({ stats }) => {
   return (
     <>
       <Typography variant="h4" gutterBottom>
-        Team Overview
+        Team overview
       </Typography>
       <Grid2
         container
@@ -35,7 +35,7 @@ const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({ stats }) => {
         ))}
       </Grid2>
       <Typography variant="h4" gutterBottom sx={{ marginTop: 5 }}>
-        Department Breakdown
+        Department breakdown
       </Typography>
       <Grid2
         container

@@ -58,17 +58,10 @@ interface BirthdaysPageProps {
 }
 
 export default function Birthdays({ birthdays, error }: BirthdaysPageProps) {
-  const { setLoading } = useGlobalLoader();
-
   if (error) return <ErrorMessage message={error} />;
 
   const handleExport = () => {
-    try {
-      setLoading(true);
-      exportToCSV(birthdays, "birthdays");
-    } finally {
-      setLoading(true);
-    }
+    exportToCSV(birthdays, "birthdays");
   };
 
   return (

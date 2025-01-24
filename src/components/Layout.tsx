@@ -42,10 +42,10 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const menuItems = [
-    { icon: <Diversity3Icon />, text: "Team Overview", path: "/team-overview" },
+    { icon: <Diversity3Icon />, text: "Team overview", path: "/team-overview" },
     {
       icon: <PauseCircleOutlineIcon />,
-      text: "Employees on Leave",
+      text: "Employees on leave",
       path: "/employees-on-leave",
     },
     { icon: <CakeIcon />, text: "Birthdays", path: "/birthdays" },
@@ -63,7 +63,7 @@ export default function Layout({ children }: LayoutProps) {
           marginTop: isMobile ? 7 : 4,
         }}
       >
-      Cercli HRIS Dashboard
+        Cercli HRIS Dashboard
       </Typography>
       <List>
         {menuItems.map((item) => (
@@ -118,7 +118,7 @@ export default function Layout({ children }: LayoutProps) {
               </IconButton>
             )}
             <Typography variant="h6" noWrap>
-            Cercli HRIS Dashboard
+              Cercli HRIS Dashboard
             </Typography>
           </Toolbar>
         </AppBar>
@@ -151,7 +151,7 @@ export default function Layout({ children }: LayoutProps) {
           flexGrow: 1,
           bgcolor: "#121212",
           color: "white",
-          paddingY: isMobile ? 10 :6,
+          paddingY: isMobile ? 10 : 6,
           paddingX: isMobile ? 2 : 5,
           minHeight: "100vh",
         }}
