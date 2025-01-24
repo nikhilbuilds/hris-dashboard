@@ -86,7 +86,17 @@ export default function EmployeesOnLeave({
   return (
     <div>
       <PageHeader title="Employees on Leave Today">
-        <Button variant="contained" color="primary" onClick={handleExport}>
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "#9C27B0", // Purple
+            color: "#FFFFFF",
+            "&:hover": {
+              backgroundColor: "#7B1FA2", // Darker purple on hover
+            },
+          }}
+          onClick={handleExport}
+        >
           Export as CSV
         </Button>
       </PageHeader>

@@ -1,26 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import {
+  AppBar,
   Box,
   CssBaseline,
   Drawer,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Toolbar,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import Link from "next/link";
+import MenuIcon from "@mui/icons-material/Menu";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import CakeIcon from "@mui/icons-material/Cake";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
+import Link from "next/link";
 
-const drawerWidth = 60;
+const drawerWidth = 240;
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   const menuItems = [
     { icon: <Diversity3Icon />, text: "Team Overview", path: "/team-overview" },
     {
@@ -31,60 +45,111 @@ export default function Layout({ children }: LayoutProps) {
     { icon: <CakeIcon />, text: "Birthdays", path: "/birthdays" },
   ];
 
+  const drawerContent = (
+    <Box>
+      <Typography
+        variant="h6"
+        align="center"
+        sx={{
+          padding: "16px",
+          fontWeight: "bold",
+          color: "#BB86FC", // Accent color
+        }}
+      >
+        HRIS Dashboard
+      </Typography>
+      <List>
+        {menuItems.map((item) => (
+          <Link
+            key={item.text}
+            href={item.path}
+            passHref
+            style={{ textDecoration: "none" }}
+          >
+            <ListItemButton
+              sx={{
+                my: 0,
+                minHeight: 60,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "#333333", // Hover color
+                },
+              }}
+              onClick={handleDrawerToggle}
+            >
+              <ListItemIcon sx={{ color: "#BB86FC" }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItemButton>
+          </Link>
+        ))}
+      </List>
+    </Box>
+  );
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <Drawer
-        variant="permanent"
-        anchor="left"
+      {/* App Bar */}
+      <AppBar
+        position="fixed"
         sx={{
-          width: 240,
+          zIndex: theme.zIndex.drawer + 1,
+          backgroundColor: "#1E1E1E",
+          color: "white",
+        }}
+      >
+        <Toolbar>
+          {isMobile && (
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ marginRight: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
+          <Typography variant="h6" noWrap>
+            HRIS Dashboard
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
+      {/* Sidebar Drawer */}
+      <Drawer
+        variant={isMobile ? "temporary" : "permanent"}
+        anchor="left"
+        open={isMobile ? mobileOpen : true}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Improves performance on mobile
+        }}
+        sx={{
+          width: drawerWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: 250,
+            width: drawerWidth,
             boxSizing: "border-box",
-            backgroundColor: "#f4f4f4",
-            borderRight: "1px solid #ddd",
+            backgroundColor: "#1E1E1E", // Sidebar color
+            color: "white",
           },
         }}
       >
-        <Link href={"/"} passHref style={{ textDecoration: "none" }}>
-          <Typography
-            variant="h6"
-            align="center"
-            sx={{ padding: "16px", fontWeight: "bold", color: "#24212175" }}
-          >
-            HRIS Dashboard{" "}
-          </Typography>
-        </Link>
-
-        <List>
-          {menuItems.map((item) => (
-            <Link href={item.path} passHref style={{ textDecoration: "none" }}>
-              <ListItemButton
-                key={item.text}
-                sx={{
-                  my: 0,
-                  minHeight: 60,
-                  color: "black",
-                }}
-              >
-                <ListItemIcon sx={{ color: "inherit" }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItemButton>
-            </Link>
-          ))}
-        </List>
+        {drawerContent}
       </Drawer>
+
+      {/* Main Content */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          bgcolor: "#f4f4f4",
-          p: 4,
-          margin: `${drawerWidth}px`,
+          bgcolor: "#121212", // Dark background color for the main area
+          color: "white", // Text color
+
+          paddingTop: 12,
+          paddingX: isMobile ? 1 : 5,
+          minHeight: "100vh", // Ensure it covers the full height
         }}
       >
         {children}

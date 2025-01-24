@@ -15,7 +15,12 @@ const FilterSelect: React.FC<FilterSelectProps> = ({
       value={department}
       onChange={onChange}
       displayEmpty
-      sx={{ marginBottom: "16px", width: "200px" }}
+      sx={{
+        marginBottom: "16px",
+        width: "200px",
+        bgcolor: "#FFFFFF",
+        color: "#000000",
+      }}
     >
       <MenuItem value="">All Departments</MenuItem>
       <MenuItem value="Engineering">Engineering</MenuItem>
