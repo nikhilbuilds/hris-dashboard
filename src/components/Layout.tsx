@@ -37,8 +37,6 @@ export default function Layout({ children }: LayoutProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  console.log(isMobile);
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -62,6 +60,7 @@ export default function Layout({ children }: LayoutProps) {
           padding: "16px",
           fontWeight: "bold",
           color: "#BB86FC",
+          marginTop: isMobile ? 7 : 4,
         }}
       >
         HRIS Dashboard

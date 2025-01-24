@@ -11,6 +11,10 @@ const GET_TEAM_OVERVIEW = gql`
       totalEmployees
       activeEmployees
       employeesOnLeave
+      departmentBreakdown {
+        department
+        count
+      }
     }
   }
 `;
