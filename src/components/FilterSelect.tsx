@@ -18,8 +18,8 @@ const FilterSelect: React.FC<FilterSelectProps> = ({
       sx={{
         marginBottom: "16px",
         width: "200px",
-        bgcolor: "#FFFFFF",
-        color: "#000000",
+        bgcolor: "common.white",
+        color: "common.black",
       }}
     >
       <MenuItem value="">All Departments</MenuItem>
@@ -27,6 +27,8 @@ const FilterSelect: React.FC<FilterSelectProps> = ({
       <MenuItem value="HR">HR</MenuItem>
       <MenuItem value="Sales">Sales</MenuItem>
       <MenuItem value="Marketing">Marketing</MenuItem>
+      <MenuItem value="Operations">Operations</MenuItem>
+      <MenuItem value="Finance">Finance</MenuItem>
     </Select>
   );
 };

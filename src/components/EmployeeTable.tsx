@@ -1,21 +1,22 @@
 import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
 import { Employee } from "@/types/employee";
 import DataTable from "./DataTable";
 
 interface EmployeeTableProps {
   employees: Employee[];
+  totalCount: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (event: unknown, newPage: number) => void;
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
+const EmployeeTable: React.FC<EmployeeTableProps> = ({
+  employees,
+  totalCount,
+  page,
+  rowsPerPage,
+  onPageChange,
+}) => {
   const columns = [
     { label: "Name", key: "name" },
     { label: "Department", key: "department" },
@@ -28,7 +29,14 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
     <DataTable
       columns={columns}
       rows={employees}
+      fixedHeight={true}
       noDataMessage="No employees on leave."
+      pagination={{
+        totalCount,
+        rowsPerPage,
+        page,
+        onPageChange,
+      }}
     />
   );
 };

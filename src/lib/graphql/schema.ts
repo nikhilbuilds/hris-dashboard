@@ -24,8 +24,19 @@ export const typeDefs = gql`
   }
 
   type Query {
-    employeesOnLeave(department: String): [Employee!]!
+    employeesOnLeave(
+      page: Int
+      limit: Int
+      department: String
+    ): EmployeesOnLeaveResult
+
     birthdaysThisWeek: [Employee!]!
+
     teamOverview: TeamStats!
+  }
+
+  type EmployeesOnLeaveResult {
+    employees: [Employee!]!
+    totalCount: Int!
   }
 `;

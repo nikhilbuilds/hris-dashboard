@@ -2,27 +2,60 @@ import { employees, departments, leaveRecords } from "../data/mock-data";
 
 export const resolvers = {
   Query: {
-    employeesOnLeave: (_: any, args: { department?: string }) => {
-      let employeesOnLeave = leaveRecords.map((leave) => {
-        const employee = employees.find((e) => e.id === leave.employeeId);
-        const department = departments.find(
-          (d) => d.id === employee?.departmentId
-        );
+    employeesOnLeave: (
+      _: any,
+      args: { page?: number; limit?: number; department?: string }
+    ) => {
+      const { page, limit, department } = args;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); 
 
-        return {
-          ...leave,
-          name: employee?.name,
-          department: department?.name,
-        };
+      const departmentMap = new Map(departments.map((d) => [d.id, d.name]));
+      const employeeMap = new Map(employees.map((e) => [e.id, e]));
+
+      const employeesOnLeaveMap = new Map();
+
+      leaveRecords.forEach((record: any) => {
+        const leaveStart = new Date(record.leaveStart);
+        const leaveEnd = new Date(record.leaveEnd);
+        leaveStart.setHours(0, 0, 0, 0);
+        leaveEnd.setHours(0, 0, 0, 0);
+
+        if (today >= leaveStart && today <= leaveEnd) {
+          const employee = employeeMap.get(record.employeeId);
+          if (!employee) return;
+
+          const departmentName = departmentMap.get(employee.departmentId);
+          
+          if (department && departmentName !== department) return;
+
+          employeesOnLeaveMap.set(employee.id, {
+            ...employee,
+            department: departmentName,
+            leaveType: record.leaveType,
+            leaveStart: record.leaveStart,
+            leaveEnd: record.leaveEnd,
+          });
+        }
       });
 
-      if (args.department) {
-        employeesOnLeave = employeesOnLeave.filter(
-          (e) => e.department === args.department
-        );
+      const filteredEmployees = Array.from(employeesOnLeaveMap.values());
+
+      if (!page || !limit) {
+        return {
+          employees: filteredEmployees,
+          totalCount: filteredEmployees.length,
+        };
       }
 
-      return employeesOnLeave;
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedEmployees = filteredEmployees.slice(startIndex, endIndex);
+
+      return {
+        employees: paginatedEmployees,
+        totalCount: filteredEmployees.length,
+      };
     },
 
     birthdaysThisWeek: () => {

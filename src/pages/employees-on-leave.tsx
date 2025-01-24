@@ -11,16 +11,35 @@ import ErrorMessage from "@/components/ErrorMessage";
 import FilterSelect from "@/components/FilterSelect";
 import EmployeeTable from "@/components/EmployeeTable";
 import PageHeader from "@/components/PageHeader";
+import { formatDate } from "@/lib/utils/dateFormatter";
 
 const GET_EMPLOYEES_ON_LEAVE = gql`
-  query EmployeesOnLeave($department: String) {
+  query EmployeesOnLeave($page: Int, $limit: Int, $department: String) {
+    employeesOnLeave(page: $page, limit: $limit, department: $department) {
+      employees {
+        id
+        name
+        department
+        leaveType
+        leaveStart
+        leaveEnd
+      }
+      totalCount
+    }
+  }
+`;
+
+const GET_ALL_EMPLOYEES_ON_LEAVE = gql`
+  query AllEmployeesOnLeave($department: String) {
     employeesOnLeave(department: $department) {
-      id
-      name
-      department
-      leaveType
-      leaveStart
-      leaveEnd
+      employees {
+        id
+        name
+        department
+        leaveType
+        leaveStart
+        leaveEnd
+      }
     }
   }
 `;
@@ -28,17 +47,28 @@ const GET_EMPLOYEES_ON_LEAVE = gql`
 export async function getServerSideProps(context: any) {
   const client = getClient();
   const department = context.query.department || "";
-
+  const page = parseInt(context.query.page || "1");
+  const limit = 10;
   try {
     const { data } = await client.query({
       query: GET_EMPLOYEES_ON_LEAVE,
-      variables: { department },
+      variables: { page, limit, department },
     });
+
+    const formattedEmployeesOnLeave = data.employeesOnLeave.employees.map(
+      (employee: any) => ({
+        ...employee,
+        leaveStart: formatDate(employee.leaveStart),
+        leaveEnd: formatDate(employee.leaveEnd),
+      })
+    );
 
     return {
       props: {
-        employeesOnLeave: data.employeesOnLeave,
+        employeesOnLeave: formattedEmployeesOnLeave,
+        totalCount: data.employeesOnLeave.totalCount,
         department,
+        currentPage: page,
       },
     };
   } catch (error: any) {
@@ -47,6 +77,9 @@ export async function getServerSideProps(context: any) {
     return {
       props: {
         employeesOnLeave: [],
+        totalCount: 0,
+        department,
+        currentPage: 1,
         error: handleError(error),
       },
     };
@@ -56,15 +89,20 @@ export async function getServerSideProps(context: any) {
 interface EmployeesOnLeaveProps {
   employeesOnLeave: Employee[];
   department: string;
+  totalCount: number;
+  currentPage: number;
   error?: string;
 }
 
 export default function EmployeesOnLeave({
   employeesOnLeave,
+  totalCount,
+  currentPage,
   department,
   error,
 }: EmployeesOnLeaveProps) {
   const router = useRouter();
+  const client = getClient();
 
   if (error) {
     return <ErrorMessage message={error} />;
@@ -79,8 +117,33 @@ export default function EmployeesOnLeave({
     });
   };
 
-  const handleExport = () => {
-    exportToCSV(employeesOnLeave, "employee_on_leave");
+  const handlePageChange = (event: unknown, newPage: number) => {
+    router.push({
+      pathname: "/employees-on-leave",
+      query: {
+        department,
+        page: newPage + 1, 
+      },
+    });
+  };
+
+  const handleExport = async () => {
+    try {
+      const { data } = await client.query({
+        query: GET_ALL_EMPLOYEES_ON_LEAVE,
+        variables: { department },
+      });
+
+      const formattedData = data.employeesOnLeave.employees.map((employee: any) => ({
+        ...employee,
+        leaveStart: formatDate(employee.leaveStart),
+        leaveEnd: formatDate(employee.leaveEnd),
+      }));
+
+      exportToCSV(formattedData, "employees_on_leave");
+    } catch (error) {
+      handleError("Error exporting data:")
+    }
   };
 
   return (
@@ -89,10 +152,10 @@ export default function EmployeesOnLeave({
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#9C27B0",
-            color: "#FFFFFF",
+            backgroundColor: "secondary.main",
+            color: "common.white",
             "&:hover": {
-              backgroundColor: "#7B1FA2",
+              backgroundColor: "secondary.dark",
             },
           }}
           onClick={handleExport}
@@ -108,7 +171,11 @@ export default function EmployeesOnLeave({
       >
         <FilterSelect department={department} onChange={handleFilterChange} />
       </Grid2>
-      <EmployeeTable employees={employeesOnLeave} />
+      <EmployeeTable  employees={employeesOnLeave}
+        totalCount={totalCount}
+        page={currentPage - 1}
+        rowsPerPage={10}
+        onPageChange={handlePageChange} />
     </div>
   );
 }

@@ -151,8 +151,7 @@ export default function Layout({ children }: LayoutProps) {
           flexGrow: 1,
           bgcolor: "#121212",
           color: "white",
-
-          paddingTop: 12,
+          paddingTop: isMobile ? 10 :6,
           paddingX: isMobile ? 2 : 5,
           minHeight: "100vh",
         }}

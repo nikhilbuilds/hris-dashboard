@@ -73,10 +73,10 @@ export default function Birthdays({ birthdays, error }: BirthdaysPageProps) {
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#9C27B0", // Purple
-            color: "#FFFFFF",
+            backgroundColor: "secondary.main",
+            color: "common.white",
             "&:hover": {
-              backgroundColor: "#7B1FA2", // Darker purple on hover
+              backgroundColor: "secondary.dark",
             },
           }}
           onClick={handleExport}

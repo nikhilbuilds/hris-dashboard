@@ -26,6 +26,7 @@ const BirthdaysTable: React.FC<BirthdaysTableProps> = ({ birthdays }) => {
     <DataTable
       columns={columns}
       rows={birthdays}
+      fixedHeight={true}
       noDataMessage="No birthdays this week."
     />
   );

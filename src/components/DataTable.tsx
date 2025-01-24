@@ -7,6 +7,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TablePagination,
 } from "@mui/material";
 
 interface Column {
@@ -14,24 +15,39 @@ interface Column {
   key: string;
 }
 
-interface GenericTableProps<T> {
+interface DataTableProps<T> {
   columns: Column[];
   rows: T[];
   noDataMessage?: string;
+  pagination?: {
+    totalCount: number;
+    rowsPerPage: number;
+    page: number;
+    onPageChange: (event: unknown, newPage: number) => void;
+  };
+  fixedHeight?: boolean;
 }
 
 const DataTable = <T extends Record<string, any>>({
   columns,
   rows,
   noDataMessage = "No data available.",
-}: GenericTableProps<T>) => {
+  pagination,
+  fixedHeight = true,
+}: DataTableProps<T>) => {
+  const rowsPerPage = pagination?.rowsPerPage || 10;
+  const emptyRows = rowsPerPage - rows.length;
+
   return (
-    <TableContainer component={Paper}>
+    <TableContainer 
+      component={Paper}
+      
+    >
       <Table>
         <TableHead>
           <TableRow
             sx={{
-              backgroundColor: "#dbdbdb",
+              backgroundColor: "grey.200",
             }}
           >
             {columns.map((column) => (
@@ -55,8 +71,28 @@ const DataTable = <T extends Record<string, any>>({
               </TableCell>
             </TableRow>
           )}
+
+          {fixedHeight && emptyRows > 0 &&
+            Array.from({ length: emptyRows }).map((_, index) => (
+              <TableRow key={`empty-${index}`} style={{ height: 53 }}>
+                {columns.map((column) => (
+                  <TableCell key={`empty-cell-${index}-${column.key}`} />
+                ))}
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
+      {pagination && (
+        <TablePagination
+          rowsPerPageOptions={[]} 
+          component="div"
+          count={pagination.totalCount}
+          rowsPerPage={pagination.rowsPerPage}
+          page={pagination.page}
+          onPageChange={pagination.onPageChange}
+          labelRowsPerPage="" 
+        />
+      )}
     </TableContainer>
   );
 };
