@@ -4,12 +4,17 @@ export const exportToCSV = (data: any[], filename: string) => {
     return;
   }
 
-  const headers = Object.keys(data[0]);
+  const sanitizedData = data.map((item) => {
+    const { __typename, ...rest } = item;
+    return rest;
+  });
+
+  const headers = Object.keys(sanitizedData[0]);
   const csvRows = [];
 
   csvRows.push(headers.join(","));
 
-  for (const row of data) {
+  for (const row of sanitizedData) {
     const values = headers.map((header) => JSON.stringify(row[header] || ""));
     csvRows.push(values.join(","));
   }

@@ -6,7 +6,7 @@ export const getClient = () => {
   if (!client || typeof window === "undefined") {
     client = new ApolloClient({
       link: new HttpLink({
-        uri: `https://hris-dashboard-theta.vercel.app/api/graphql`,
+        uri: `${process.env.GRAPHQL_URI}/api/graphql`,
       }),
       cache: new InMemoryCache(),
     });

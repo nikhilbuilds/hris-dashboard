@@ -1,22 +1,16 @@
 import React from "react";
 import Grid2 from "@mui/material/Grid2";
-import {
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Select,
-  Button,
-  MenuItem,
-} from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import { gql } from "@apollo/client";
 import { getClient } from "@/lib/graphql/apollo-client";
-import { exportToCSV } from "../lib/utils/exportCsv";
+import { exportToCSV } from "@/lib/utils/exportCsv";
 import { useRouter } from "next/router";
+import { handleError } from "@/lib/utils/errorHandler";
+import { Employee } from "@/types/employee";
+import ErrorMessage from "@/components/ErrorMessage";
+import FilterSelect from "@/components/FilterSelect";
+import EmployeeTable from "@/components/EmployeeTable";
+import PageHeader from "@/components/PageHeader";
 
 const GET_EMPLOYEES_ON_LEAVE = gql`
   query EmployeesOnLeave($department: String) {
@@ -47,27 +41,20 @@ export async function getServerSideProps(context: any) {
         department,
       },
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching data:", error);
 
     return {
       props: {
         employeesOnLeave: [],
-        error: "Failed to fetch employees on leave.",
+        error: handleError(error),
       },
     };
   }
 }
 
 interface EmployeesOnLeaveProps {
-  employeesOnLeave: {
-    id: string;
-    name: string;
-    department: string;
-    leaveType: string;
-    leaveStart: string;
-    leaveEnd: string;
-  }[];
+  employeesOnLeave: Employee[];
   department: string;
   error?: string;
 }
@@ -80,16 +67,7 @@ export default function EmployeesOnLeave({
   const router = useRouter();
 
   if (error) {
-    return (
-      <Typography
-        variant="h6"
-        color="error"
-        align="center"
-        sx={{ marginTop: "20px" }}
-      >
-        {error}
-      </Typography>
-    );
+    return <ErrorMessage message={error} />;
   }
 
   const handleFilterChange = (event: any) => {
@@ -101,71 +79,26 @@ export default function EmployeesOnLeave({
     });
   };
 
+  const handleExport = () => {
+    exportToCSV(employeesOnLeave, "employee_on_leave");
+  };
+
   return (
     <div>
-      <Grid2
-        container
-        sx={{
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          Employees on Leave Today
-        </Typography>
-
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ marginBottom: "16px" }}
-          onClick={() => exportToCSV(employeesOnLeave, "employee_on_leave")}
-        >
+      <PageHeader title="Employees on Leave Today">
+        <Button variant="contained" color="primary" onClick={handleExport}>
           Export as CSV
         </Button>
-      </Grid2>
+      </PageHeader>
       <Grid2
         container
         spacing={8}
         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         marginTop={2}
       >
-        <Select
-          value={department}
-          onChange={handleFilterChange}
-          displayEmpty
-          sx={{ marginBottom: "16px", width: "200px" }}
-        >
-          <MenuItem value="">All Departments</MenuItem>
-          <MenuItem value="Engineering">Engineering</MenuItem>
-          <MenuItem value="HR">HR</MenuItem>
-          <MenuItem value="Sales">Sales</MenuItem>
-          <MenuItem value="Marketing">Marketing</MenuItem>
-        </Select>
+        <FilterSelect department={department} onChange={handleFilterChange} />
       </Grid2>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Department</TableCell>
-              <TableCell>Leave Type</TableCell>
-              <TableCell>Start Date</TableCell>
-              <TableCell>End Date</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {employeesOnLeave.map((employee: any) => (
-              <TableRow key={employee.id}>
-                <TableCell>{employee.name}</TableCell>
-                <TableCell>{employee.department}</TableCell>
-                <TableCell>{employee.leaveType}</TableCell>
-                <TableCell>{employee.leaveStart}</TableCell>
-                <TableCell>{employee.leaveEnd}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <EmployeeTable employees={employeesOnLeave} />
     </div>
   );
 }

@@ -1,20 +1,14 @@
 import React from "react";
 import Grid2 from "@mui/material/Grid2";
-import {
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-} from "@mui/material";
 import { gql } from "@apollo/client";
 import { getClient } from "@/lib/graphql/apollo-client";
-import moment from "moment";
-import { exportToCSV } from "../lib/utils/exportCsv";
+import { exportToCSV } from "@/lib/utils/exportCsv";
+import { formatDate } from "@/lib/utils/dateFormatter";
+import { Birthday } from "@/types/birthday";
+import ErrorMessage from "@/components/ErrorMessage";
+import BirthdaysTable from "@/components/BirthdaysTable";
+import PageHeader from "@/components/PageHeader";
+import { Button } from "@mui/material";
 
 const GET_BIRTHDAYS_THIS_WEEK = gql`
   query BirthdaysThisWeek {
@@ -37,8 +31,10 @@ export async function getServerSideProps() {
 
     const formattedBirthdays = data.birthdaysThisWeek.map((birthday: any) => ({
       ...birthday,
-      dob: moment(birthday.dob).format("LL"),
+      dob: formatDate(birthday.dob),
     }));
+
+    console.log(formattedBirthdays);
 
     return {
       props: {
@@ -57,86 +53,29 @@ export async function getServerSideProps() {
   }
 }
 
-interface BirthdaysProps {
-  birthdays: {
-    id: string;
-    name: string;
-    department: string;
-    dob: string;
-  }[];
+interface BirthdaysPageProps {
+  birthdays: Birthday[];
   error?: string;
 }
 
-export default function Birthdays({ birthdays, error }: BirthdaysProps) {
+export default function Birthdays({ birthdays, error }: BirthdaysPageProps) {
   if (error) {
-    return (
-      <Typography
-        variant="h6"
-        color="error"
-        align="center"
-        sx={{ marginTop: "20px" }}
-      >
-        {error}
-      </Typography>
-    );
+    return <ErrorMessage message={error} />;
   }
+
+  const handleExport = () => {
+    exportToCSV(birthdays, "birthdays");
+  };
 
   return (
     <div>
-      <Grid2
-        container
-        sx={{
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          Birthdays This Week
-        </Typography>
-
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ marginBottom: "16px" }}
-          onClick={() => exportToCSV(birthdays, "birthdays")}
-        >
+      <PageHeader title="Birthdays this week">
+        <Button variant="contained" color="primary" onClick={handleExport}>
           Export as CSV
         </Button>
-      </Grid2>
-      <Grid2
-        container
-        spacing={8}
-        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-        marginTop={2}
-      >
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Department</TableCell>
-                <TableCell>Date of Birth</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {birthdays.length > 0 ? (
-                birthdays.map((birthday) => (
-                  <TableRow key={birthday.id}>
-                    <TableCell>{birthday.name}</TableCell>
-                    <TableCell>{birthday.department}</TableCell>
-                    <TableCell>{birthday.dob}</TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={3} align="center">
-                    No birthdays this week.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+      </PageHeader>
+      <Grid2 container>
+        <BirthdaysTable birthdays={birthdays} />
       </Grid2>
     </div>
   );
