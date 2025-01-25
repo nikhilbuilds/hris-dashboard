@@ -36,9 +36,9 @@ const StatCard: React.FC<StatCardProps> = ({
       </CardContent>
       <Button
         onClick={handleExport}
-        sx={{ fontWeight: "bold", textAlign: "center" }}
+        sx={{  textAlign: "center" }}
       >
-        Export as CSV
+        Export
       </Button>
     </Card>
   );

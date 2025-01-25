@@ -238,6 +238,37 @@ Sample Schema
 
 ---
 
+## **Code Structure and Optimizations**
+
+### **Current Implementation**
+
+- GraphQL resolvers for employee data management
+- Separate queries for overview stats and detailed data
+- Basic caching with Apollo Client
+- In-memory data handling with mock data
+
+### **Potential Optimizations**
+
+1. **GraphQL Resolvers**
+
+   - Implement DataLoader for batching database queries
+   - Add caching layer for frequently accessed data
+   - Optimize leave status calculations
+   - Add field-level resolvers for better performance
+
+2. **Query Optimizations**
+
+   - Add field selection optimization
+   - Optimize nested resolvers
+   - Add query complexity analysis
+
+3. **Data Fetching**
+   - Implement real-time updates where needed
+   - Add proper error boundaries
+   - Add request throttling
+
+---
+
 ### **Future Enhancements**
 
 1. Add additional visualizations (e.g., charts for team stats).
@@ -247,3 +278,4 @@ Sample Schema
 5. Add search functionality.
 6. Implement data caching.
 7. Add more detailed employee profiles
+8. Add proper monitoring and logging
