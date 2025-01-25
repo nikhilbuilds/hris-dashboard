@@ -171,6 +171,9 @@ src/
 ├── components/     # Reusable components
 ├── context/        # Context API
 ├── lib/            # Utility functions and GraphQL setup
+   ├── data/        # Mock data
+   ├── graphql/     # GraphQL queries
+   ├── utils/       # Utility functions
 ├── pages/          # Page components, NextJS page routing
 ├── types/          # TypeScript types
 ├── .env            # Environment variables
