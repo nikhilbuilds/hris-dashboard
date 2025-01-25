@@ -60,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = async (
 ) => {
   const client = getClient();
   const department = context.query.department || "";
-  const page = parseInt(context.query.page as string);
+  const page = parseInt(context.query.page as string || "1");
   const limit = 10;
   try {
     const { data } = await client.query({
