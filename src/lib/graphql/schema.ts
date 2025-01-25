@@ -1,6 +1,12 @@
 import { gql } from "graphql-tag";
 
 export const typeDefs = gql`
+  enum EmployeeFilter {
+    ALL
+    ACTIVE
+    ON_LEAVE
+  }
+
   type Employee {
     id: ID!
     name: String!
@@ -9,6 +15,11 @@ export const typeDefs = gql`
     leaveStart: String
     leaveEnd: String
     dob: String
+  }
+
+  type Departments {
+    id: ID!
+    name: String!
   }
 
   type TeamStats {
@@ -30,6 +41,10 @@ export const typeDefs = gql`
       department: String
     ): EmployeesOnLeaveResult
 
+   employees(
+    filter: String
+  ): [Employee!]!
+
     birthdaysThisWeek: [Employee!]!
 
     teamOverview: TeamStats!
@@ -42,8 +57,5 @@ export const typeDefs = gql`
     totalCount: Int!
   }
 
-  type Departments {
-    id: ID!
-    name: String!
-  }
+  
 `;

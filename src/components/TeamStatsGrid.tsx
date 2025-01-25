@@ -4,22 +4,39 @@ import StatCard from "@/components/StatCard";
 import { TeamStats } from "@/types/team";
 import { Typography } from "@mui/material";
 import PageHeader from "./PageHeader";
+import { EmployeeFilter, FilterType } from "@/types/employeeFilter";
 
 interface TeamStatsGridProps {
   stats: TeamStats;
+  export: (filter: FilterType) => void;
 }
 
-const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({ stats }) => {
+const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({
+  stats,
+  export: handleExport,
+}) => {
   const statsArray = [
-    { title: "Total Employees", value: stats.totalEmployees },
-    { title: "Active Employees", value: stats.activeEmployees },
-    { title: "Employees on Leave", value: stats.employeesOnLeave },
+    {
+      title: "Total Employees",
+      value: stats.totalEmployees,
+      filter: EmployeeFilter.ALL,
+    },
+    {
+      title: "Active Employees",
+      value: stats.activeEmployees,
+      filter: EmployeeFilter.ACTIVE,
+    },
+    {
+      title: "Employees on Leave",
+      value: stats.employeesOnLeave,
+      filter: EmployeeFilter.ON_LEAVE,
+    },
   ];
 
   return (
     <>
-    <PageHeader title="Team overview" />
-  
+      <PageHeader title="Team overview" />
+
       <Grid2
         container
         spacing={2}
@@ -30,7 +47,11 @@ const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({ stats }) => {
       >
         {statsArray.map((stat) => (
           <Grid2 key={stat.title} size={{ xs: 12, md: 4, sm: 6 }}>
-            <StatCard title={stat.title} value={stat.value} />
+            <StatCard
+              exportButton={() => handleExport(stat.filter)}
+              title={stat.title}
+              value={stat.value}
+            />
           </Grid2>
         ))}
       </Grid2>
@@ -47,7 +68,11 @@ const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({ stats }) => {
       >
         {stats.departmentBreakdown.map((data) => (
           <Grid2 key={data.department} size={{ xs: 12, md: 4, sm: 6 }}>
-            <StatCard title={data.department} value={data.count} />
+            <StatCard
+              exportButton={() => handleExport(`DEPARTMENT_${data.department}`)}
+              title={data.department}
+              value={data.count}
+            />
           </Grid2>
         ))}
       </Grid2>

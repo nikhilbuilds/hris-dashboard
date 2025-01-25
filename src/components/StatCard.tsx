@@ -1,12 +1,17 @@
 import React from "react";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Button, Card, CardContent, Typography } from "@mui/material";
 
 interface StatCardProps {
   title: string;
   value: number;
+  exportButton: any;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value }) => {
+const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  exportButton: handleExport,
+}) => {
   return (
     <Card
       sx={{
@@ -15,6 +20,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value }) => {
         padding: "16px",
         backgroundColor: "#24212175",
         color: "white",
+        justifyItems: "center",
       }}
     >
       <CardContent>
@@ -28,6 +34,12 @@ const StatCard: React.FC<StatCardProps> = ({ title, value }) => {
           {value}
         </Typography>
       </CardContent>
+      <Button
+        onClick={handleExport}
+        sx={{ fontWeight: "bold", textAlign: "center" }}
+      >
+        Export as CSV
+      </Button>
     </Card>
   );
 };

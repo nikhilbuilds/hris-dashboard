@@ -5,6 +5,7 @@ export interface Employee {
   leaveType: string;
   leaveStart: string;
   leaveEnd: string;
+  dob?: string
 }
 
 export interface Department {

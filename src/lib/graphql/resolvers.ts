@@ -1,4 +1,43 @@
 import { employees, departments, leaveRecords } from "../data/mock-data";
+import { EmployeeFilter, FilterType } from "@/types/employeeFilter";
+
+const getEmployeesWithDepartment = (
+  employeeList: any[],
+  departmentMap: Map<string, string>
+) => {
+  return employeeList.map((employee) => ({
+    ...employee,
+    department: departmentMap.get(employee.departmentId),
+  }));
+};
+
+const getEmployeesOnLeaveForDate = (date: Date) => {
+  const departmentMap = new Map(departments.map((d) => [d.id, d.name]));
+  const employeeMap = new Map(employees.map((e) => [e.id, e]));
+  const employeesOnLeaveMap = new Map();
+
+  leaveRecords.forEach((record) => {
+    const leaveStart = new Date(record.leaveStart);
+    const leaveEnd = new Date(record.leaveEnd);
+    leaveStart.setHours(0, 0, 0, 0);
+    leaveEnd.setHours(0, 0, 0, 0);
+
+    if (date >= leaveStart && date <= leaveEnd) {
+      const employee = employeeMap.get(record.employeeId);
+      if (!employee) return;
+
+      employeesOnLeaveMap.set(employee.id, {
+        ...employee,
+        department: departmentMap.get(employee.departmentId),
+        leaveType: record.leaveType,
+        leaveStart: record.leaveStart,
+        leaveEnd: record.leaveEnd,
+      });
+    }
+  });
+
+  return Array.from(employeesOnLeaveMap.values());
+};
 
 export const resolvers = {
   Query: {
@@ -10,50 +49,26 @@ export const resolvers = {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      const departmentMap = new Map(departments.map((d) => [d.id, d.name]));
-      const employeeMap = new Map(employees.map((e) => [e.id, e]));
+      let filteredEmployees = getEmployeesOnLeaveForDate(today);
 
-      const employeesOnLeaveMap = new Map();
+      if (department) {
+        filteredEmployees = filteredEmployees.filter(
+          (employee) => employee.department === department
+        );
+      }
 
-      leaveRecords.forEach((record: any) => {
-        const leaveStart = new Date(record.leaveStart);
-        const leaveEnd = new Date(record.leaveEnd);
-        leaveStart.setHours(0, 0, 0, 0);
-        leaveEnd.setHours(0, 0, 0, 0);
-
-        if (today >= leaveStart && today <= leaveEnd) {
-          const employee = employeeMap.get(record.employeeId);
-          if (!employee) return;
-
-        const departmentName = departmentMap.get(employee.departmentId);
-
-        if (department && departmentName !== department) return;
-
-          employeesOnLeaveMap.set(employee.id, {
-            ...employee,
-            department: departmentName,
-            leaveType: record.leaveType,
-            leaveStart: record.leaveStart,
-            leaveEnd: record.leaveEnd,
-          });
-        }
-      });
-
-      const filteredEmployees = Array.from(employeesOnLeaveMap.values());
-
-      if (!page || !limit) {
+      // Handle pagination
+      if (page && limit) {
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
         return {
-          employees: filteredEmployees,
+          employees: filteredEmployees.slice(startIndex, endIndex),
           totalCount: filteredEmployees.length,
         };
       }
 
-      const startIndex = (page - 1) * limit;
-      const endIndex = startIndex + limit;
-      const paginatedEmployees = filteredEmployees.slice(startIndex, endIndex);
-
       return {
-        employees: paginatedEmployees,
+        employees: filteredEmployees,
         totalCount: filteredEmployees.length,
       };
     },
@@ -95,7 +110,10 @@ export const resolvers = {
 
     teamOverview: () => {
       const totalEmployees = employees.length;
-      const employeesOnLeave = leaveRecords.length;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      let employeesOnLeave = getEmployeesOnLeaveForDate(today).length;
       const activeEmployees = totalEmployees - employeesOnLeave;
 
       const departmentBreakdown = departments.map((department) => ({
@@ -110,8 +128,48 @@ export const resolvers = {
         departmentBreakdown,
       };
     },
-    getDepartmentList:() => {
+    getDepartmentList: () => {
       return departments;
-    }
+    },
+    employees: (_: any, { filter }: { filter: FilterType }) => {
+      const departmentMap = new Map(departments.map((d) => [d.id, d.name]));
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      switch (filter) {
+        case EmployeeFilter.ALL:
+          return getEmployeesWithDepartment(employees, departmentMap);
+
+        case EmployeeFilter.ACTIVE: {
+          const onLeaveEmployees = getEmployeesOnLeaveForDate(today);
+          const onLeaveIds = new Set(onLeaveEmployees.map((e) => e.id));
+          const activeEmployees = employees.filter(
+            (e) => !onLeaveIds.has(e.id)
+          );
+          return getEmployeesWithDepartment(activeEmployees, departmentMap);
+        }
+
+        case EmployeeFilter.ON_LEAVE:
+          return getEmployeesOnLeaveForDate(today);
+
+        default:
+          if (filter.startsWith("DEPARTMENT_")) {
+            const departmentName = filter.replace("DEPARTMENT_", "");
+            const department = departments.find(
+              (d) => d.name === departmentName
+            );
+            if (department) {
+              const departmentEmployees = employees.filter(
+                (e) => e.departmentId === department.id
+              );
+              return getEmployeesWithDepartment(
+                departmentEmployees,
+                departmentMap
+              );
+            }
+          }
+          return [];
+      }
+    },
   },
 };
