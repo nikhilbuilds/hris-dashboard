@@ -156,7 +156,7 @@ export default function EmployeesOnLeave({
   };
 
   return (
-    <div>
+    <>
       <PageHeader title="Employees on leave today">
         <Button
           variant="contained"
@@ -187,6 +187,6 @@ export default function EmployeesOnLeave({
         rowsPerPage={10}
         onPageChange={handlePageChange}
       />
-    </div>
+    </>
   );
 }

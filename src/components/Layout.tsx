@@ -117,9 +117,7 @@ export default function Layout({ children }: LayoutProps) {
                 <MenuIcon />
               </IconButton>
             )}
-            <Typography variant="h6" noWrap>
-              Cercli HRIS Dashboard
-            </Typography>
+            <Typography variant="h6">Cercli HRIS</Typography>
           </Toolbar>
         </AppBar>
       )}

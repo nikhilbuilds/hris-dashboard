@@ -3,6 +3,7 @@ import Grid2 from "@mui/material/Grid2";
 import StatCard from "@/components/StatCard";
 import { TeamStats } from "@/types/team";
 import { Typography } from "@mui/material";
+import PageHeader from "./PageHeader";
 
 interface TeamStatsGridProps {
   stats: TeamStats;
@@ -17,9 +18,8 @@ const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({ stats }) => {
 
   return (
     <>
-      <Typography variant="h4" gutterBottom>
-        Team overview
-      </Typography>
+    <PageHeader title="Team overview" />
+  
       <Grid2
         container
         spacing={2}
