@@ -15,16 +15,18 @@ interface Column {
   key: string;
 }
 
+interface PaginationProps {
+  totalCount: number;
+  rowsPerPage: number;
+  page: number;
+  onPageChange: (event: unknown, newPage: number) => void;
+}
+
 interface DataTableProps<T> {
   columns: Column[];
   rows: T[];
   noDataMessage?: string;
-  pagination?: {
-    totalCount: number;
-    rowsPerPage: number;
-    page: number;
-    onPageChange: (event: unknown, newPage: number) => void;
-  };
+  pagination?: PaginationProps;
   fixedHeight?: boolean;
 }
 

@@ -110,14 +110,16 @@ interface EmployeesOnLeaveProps {
   error?: string;
 }
 
-export default function EmployeesOnLeave({
-  employeesOnLeave,
-  totalCount,
-  currentPage,
-  department,
-  error,
-  departmentList,
-}: EmployeesOnLeaveProps) {
+export default function EmployeesOnLeave(props: EmployeesOnLeaveProps) {
+  const {
+    employeesOnLeave,
+    departmentList,
+    totalCount,
+    currentPage,
+    department,
+    error,
+  } = props;
+
   const router = useRouter();
   const client = getClient();
   const { setLoading } = useGlobalLoader();
@@ -164,7 +166,7 @@ export default function EmployeesOnLeave({
 
       exportToCSV(formattedData, "employees_on_leave");
     } catch (error) {
-      handleError("Error exporting data:");
+      handleError("Failed to export employee data");
     } finally {
       setLoading(false);
     }
