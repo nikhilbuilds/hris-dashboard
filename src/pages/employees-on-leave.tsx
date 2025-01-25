@@ -13,6 +13,7 @@ import EmployeeTable from "@/components/EmployeeTable";
 import PageHeader from "@/components/PageHeader";
 import { formatDate } from "@/lib/utils/dateFormatter";
 import { useGlobalLoader } from "@/context/LoaderContext";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
 const GET_EMPLOYEES_ON_LEAVE = gql`
   query EmployeesOnLeave($page: Int, $limit: Int, $department: String) {
@@ -54,10 +55,12 @@ const GET_DEPARTMENT_LIST = gql`
   }
 `;
 
-export async function getServerSideProps(context: any) {
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
   const client = getClient();
   const department = context.query.department || "";
-  const page = parseInt(context.query.page || "1");
+  const page = parseInt(context.query.page as string);
   const limit = 10;
   try {
     const { data } = await client.query({
