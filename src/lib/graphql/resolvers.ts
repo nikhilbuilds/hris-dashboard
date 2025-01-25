@@ -110,5 +110,8 @@ export const resolvers = {
         departmentBreakdown,
       };
     },
+    getDepartmentList:() => {
+      return departments;
+    }
   },
 };

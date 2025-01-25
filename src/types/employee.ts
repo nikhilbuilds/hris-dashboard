@@ -7,3 +7,7 @@ export interface Employee {
   leaveEnd: string;
 }
 
+export interface Department {
+  id: string;
+  name: string;
+}

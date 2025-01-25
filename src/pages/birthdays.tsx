@@ -9,7 +9,6 @@ import ErrorMessage from "@/components/ErrorMessage";
 import BirthdaysTable from "@/components/BirthdaysTable";
 import PageHeader from "@/components/PageHeader";
 import { Button } from "@mui/material";
-import { useGlobalLoader } from "@/context/LoaderContext";
 
 const GET_BIRTHDAYS_THIS_WEEK = gql`
   query BirthdaysThisWeek {
@@ -30,10 +29,12 @@ export async function getServerSideProps() {
       query: GET_BIRTHDAYS_THIS_WEEK,
     });
 
-    const formattedBirthdays = data.birthdaysThisWeek.map((birthday: Birthday) => ({
-      ...birthday,
-      dob: formatBirthday(birthday.dob),
-    }));
+    const formattedBirthdays = data.birthdaysThisWeek.map(
+      (birthday: Birthday) => ({
+        ...birthday,
+        dob: formatBirthday(birthday.dob),
+      })
+    );
 
     return {
       props: {
@@ -41,7 +42,7 @@ export async function getServerSideProps() {
       },
     };
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching data(BIRTHDAY):", error);
 
     return {
       props: {

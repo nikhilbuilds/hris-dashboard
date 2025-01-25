@@ -1,12 +1,12 @@
 import React from "react";
 import Grid2 from "@mui/material/Grid2";
-import { Typography, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { gql } from "@apollo/client";
 import { getClient } from "@/lib/graphql/apollo-client";
 import { exportToCSV } from "@/lib/utils/exportCsv";
 import { useRouter } from "next/router";
 import { handleError } from "@/lib/utils/errorHandler";
-import { Employee } from "@/types/employee";
+import { Department, Employee } from "@/types/employee";
 import ErrorMessage from "@/components/ErrorMessage";
 import FilterSelect from "@/components/FilterSelect";
 import EmployeeTable from "@/components/EmployeeTable";
@@ -45,6 +45,15 @@ const GET_ALL_EMPLOYEES_ON_LEAVE = gql`
   }
 `;
 
+const GET_DEPARTMENT_LIST = gql`
+  query GetDepartmentList {
+    getDepartmentList {
+      id
+      name
+    }
+  }
+`;
+
 export async function getServerSideProps(context: any) {
   const client = getClient();
   const department = context.query.department || "";
@@ -54,6 +63,10 @@ export async function getServerSideProps(context: any) {
     const { data } = await client.query({
       query: GET_EMPLOYEES_ON_LEAVE,
       variables: { page, limit, department },
+    });
+
+    const departments = await client.query({
+      query: GET_DEPARTMENT_LIST,
     });
 
     const formattedEmployeesOnLeave = data.employeesOnLeave.employees.map(
@@ -67,13 +80,14 @@ export async function getServerSideProps(context: any) {
     return {
       props: {
         employeesOnLeave: formattedEmployeesOnLeave,
+        departmentList: departments.data.getDepartmentList,
         totalCount: data.employeesOnLeave.totalCount,
         department,
         currentPage: page,
       },
     };
   } catch (error: any) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching data(EMPLOYEES_ON_LEAVE):", error);
 
     return {
       props: {
@@ -81,7 +95,7 @@ export async function getServerSideProps(context: any) {
         totalCount: 0,
         department,
         currentPage: 1,
-        error: handleError(error),
+        error: "Failed to fetch employees on leave",
       },
     };
   }
@@ -90,6 +104,7 @@ export async function getServerSideProps(context: any) {
 interface EmployeesOnLeaveProps {
   employeesOnLeave: Employee[];
   department: string;
+  departmentList: Department[];
   totalCount: number;
   currentPage: number;
   error?: string;
@@ -101,13 +116,13 @@ export default function EmployeesOnLeave({
   currentPage,
   department,
   error,
+  departmentList,
 }: EmployeesOnLeaveProps) {
   const router = useRouter();
   const client = getClient();
   const { setLoading } = useGlobalLoader();
 
   if (error) return <ErrorMessage message={error} />;
-  
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDepartment = event.target.value;
@@ -178,7 +193,11 @@ export default function EmployeesOnLeave({
         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         marginTop={2}
       >
-        <FilterSelect department={department} onChange={handleFilterChange} />
+        <FilterSelect
+          departmentList={departmentList}
+          department={department}
+          onChange={handleFilterChange}
+        />
       </Grid2>
       <EmployeeTable
         employees={employeesOnLeave}

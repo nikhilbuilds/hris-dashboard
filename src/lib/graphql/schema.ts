@@ -33,10 +33,17 @@ export const typeDefs = gql`
     birthdaysThisWeek: [Employee!]!
 
     teamOverview: TeamStats!
+
+    getDepartmentList: [Departments!]!
   }
 
   type EmployeesOnLeaveResult {
     employees: [Employee!]!
     totalCount: Int!
+  }
+
+  type Departments {
+    id: ID!
+    name: String!
   }
 `;

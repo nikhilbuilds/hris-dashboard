@@ -1,13 +1,16 @@
 import React from "react";
 import { Select, MenuItem } from "@mui/material";
+import { Department } from "@/types/employee";
 
 interface FilterSelectProps {
   department: string;
+  departmentList: Department[];
   onChange: (event: any) => void;
 }
 
 const FilterSelect: React.FC<FilterSelectProps> = ({
   department,
+  departmentList,
   onChange,
 }) => {
   return (
@@ -23,12 +26,12 @@ const FilterSelect: React.FC<FilterSelectProps> = ({
       }}
     >
       <MenuItem value="">All Departments</MenuItem>
-      <MenuItem value="Engineering">Engineering</MenuItem>
-      <MenuItem value="HR">HR</MenuItem>
-      <MenuItem value="Sales">Sales</MenuItem>
-      <MenuItem value="Marketing">Marketing</MenuItem>
-      <MenuItem value="Operations">Operations</MenuItem>
-      <MenuItem value="Finance">Finance</MenuItem>
+      {departmentList?.length &&
+        departmentList?.map((department) => (
+          <MenuItem key={department.id} value={department.name}>
+            {department.name}
+          </MenuItem>
+        ))}
     </Select>
   );
 };
