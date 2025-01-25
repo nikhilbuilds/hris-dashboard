@@ -4,6 +4,6 @@ export function formatDate(date: string): string {
   return moment(date).format("DD MMM YYYY");
 }
 
-export function formatBirthday(date: string): string {
+export function formatToDateMonth(date: string): string {
   return moment(date).format("DD MMMM");
 }

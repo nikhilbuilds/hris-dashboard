@@ -39,10 +39,7 @@ const DataTable = <T extends Record<string, any>>({
   const emptyRows = rowsPerPage - rows.length;
 
   return (
-    <TableContainer 
-      component={Paper}
-      
-    >
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow
@@ -72,7 +69,8 @@ const DataTable = <T extends Record<string, any>>({
             </TableRow>
           )}
 
-          {fixedHeight && emptyRows > 0 &&
+          {fixedHeight &&
+            emptyRows > 0 &&
             Array.from({ length: emptyRows }).map((_, index) => (
               <TableRow key={`empty-${index}`} style={{ height: 53 }}>
                 {columns.map((column) => (
@@ -84,13 +82,13 @@ const DataTable = <T extends Record<string, any>>({
       </Table>
       {pagination && (
         <TablePagination
-          rowsPerPageOptions={[]} 
+          rowsPerPageOptions={[]}
           component="div"
           count={pagination.totalCount}
           rowsPerPage={pagination.rowsPerPage}
           page={pagination.page}
           onPageChange={pagination.onPageChange}
-          labelRowsPerPage="" 
+          labelRowsPerPage=""
         />
       )}
     </TableContainer>
