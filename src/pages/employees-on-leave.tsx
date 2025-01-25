@@ -1,11 +1,8 @@
 import React from "react";
 import Grid2 from "@mui/material/Grid2";
 import { Button } from "@mui/material";
-import { gql } from "@apollo/client";
 import { getClient } from "@/lib/graphql/apollo-client";
-import { exportToCSV } from "@/lib/utils/exportCsv";
 import { useRouter } from "next/router";
-import { handleError } from "@/lib/utils/errorHandler";
 import { Department, Employee } from "@/types/employee";
 import ErrorMessage from "@/components/ErrorMessage";
 import FilterSelect from "@/components/FilterSelect";
@@ -14,46 +11,9 @@ import PageHeader from "@/components/PageHeader";
 import { formatDate } from "@/lib/utils/dateFormatter";
 import { useGlobalLoader } from "@/context/LoaderContext";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { handleExport } from "@/lib/utils/exportHandler";
+import { GET_DEPARTMENT_LIST, GET_EMPLOYEES_ON_LEAVE } from "@/lib/graphql/queries";
 
-const GET_EMPLOYEES_ON_LEAVE = gql`
-  query EmployeesOnLeave($page: Int, $limit: Int, $department: String) {
-    employeesOnLeave(page: $page, limit: $limit, department: $department) {
-      employees {
-        id
-        name
-        department
-        leaveType
-        leaveStart
-        leaveEnd
-      }
-      totalCount
-    }
-  }
-`;
-
-const GET_ALL_EMPLOYEES_ON_LEAVE = gql`
-  query AllEmployeesOnLeave($department: String) {
-    employeesOnLeave(department: $department) {
-      employees {
-        id
-        name
-        department
-        leaveType
-        leaveStart
-        leaveEnd
-      }
-    }
-  }
-`;
-
-const GET_DEPARTMENT_LIST = gql`
-  query GetDepartmentList {
-    getDepartmentList {
-      id
-      name
-    }
-  }
-`;
 
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
@@ -148,31 +108,14 @@ export default function EmployeesOnLeave(props: EmployeesOnLeaveProps) {
     });
   };
 
-  const handleExport = async () => {
-    try {
-      setLoading(true);
-      const { data } = await client.query({
-        query: GET_ALL_EMPLOYEES_ON_LEAVE,
-        variables: { department },
-      });
-
-      const formattedData = data.employeesOnLeave.employees.map(
-        (employee: Employee) => ({
-          id: employee.id,
-          name: employee.name,
-          department: employee.department,
-          "Leave type": employee.leaveType,
-          "Leave start date": formatDate(employee.leaveStart),
-          "Leave end date": formatDate(employee.leaveEnd),
-        })
-      );
-
-      exportToCSV(formattedData, "employees_on_leave");
-    } catch (error) {
-      handleError("Failed to export employee data");
-    } finally {
-      setLoading(false);
-    }
+  const handleCSVExport = async () => {
+    await handleExport(
+      client,
+      "ON_LEAVE",
+      "employees_on_leave",
+      setLoading,
+      { department }
+    );
   };
 
   return (
@@ -187,7 +130,7 @@ export default function EmployeesOnLeave(props: EmployeesOnLeaveProps) {
               backgroundColor: "secondary.dark",
             },
           }}
-          onClick={handleExport}
+          onClick={handleCSVExport}
         >
           Export as CSV
         </Button>

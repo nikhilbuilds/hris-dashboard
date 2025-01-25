@@ -1,6 +1,5 @@
 import React from "react";
 import Grid2 from "@mui/material/Grid2";
-import { gql } from "@apollo/client";
 import { getClient } from "@/lib/graphql/apollo-client";
 import { exportToCSV } from "@/lib/utils/exportCsv";
 import { formatToDateMonth } from "@/lib/utils/dateFormatter";
@@ -9,24 +8,15 @@ import ErrorMessage from "@/components/ErrorMessage";
 import BirthdaysTable from "@/components/BirthdaysTable";
 import PageHeader from "@/components/PageHeader";
 import { Button } from "@mui/material";
+import { GET_BIRTHDAYS } from "@/lib/graphql/queries";
 
-const GET_BIRTHDAYS_THIS_WEEK = gql`
-  query BirthdaysThisWeek {
-    birthdaysThisWeek {
-      id
-      name
-      department
-      dob
-    }
-  }
-`;
 
 export async function getServerSideProps() {
   const client = getClient();
 
   try {
     const { data } = await client.query({
-      query: GET_BIRTHDAYS_THIS_WEEK,
+      query: GET_BIRTHDAYS,
     });
 
     const formattedBirthdays = data.birthdaysThisWeek.map(

@@ -8,13 +8,10 @@ import { EmployeeFilter, FilterType } from "@/types/employeeFilter";
 
 interface TeamStatsGridProps {
   stats: TeamStats;
-  export: (filter: FilterType) => void;
+  onExport: (filter: FilterType) => Promise<void>;
 }
 
-const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({
-  stats,
-  export: handleExport,
-}) => {
+const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({ stats, onExport }) => {
   const statsArray = [
     {
       title: "Total Employees",
@@ -48,7 +45,7 @@ const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({
         {statsArray.map((stat) => (
           <Grid2 key={stat.title} size={{ xs: 12, md: 4, sm: 6 }}>
             <StatCard
-              exportButton={() => handleExport(stat.filter)}
+              exportButton={() => onExport(stat.filter)}
               title={stat.title}
               value={stat.value}
             />
@@ -69,7 +66,7 @@ const TeamStatsGrid: React.FC<TeamStatsGridProps> = ({
         {stats.departmentBreakdown.map((data) => (
           <Grid2 key={data.department} size={{ xs: 12, md: 4, sm: 6 }}>
             <StatCard
-              exportButton={() => handleExport(`DEPARTMENT_${data.department}`)}
+              exportButton={() => onExport(`DEPARTMENT_${data.department}`)}
               title={data.department}
               value={data.count}
             />

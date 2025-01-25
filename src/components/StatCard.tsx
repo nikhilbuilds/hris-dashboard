@@ -4,7 +4,7 @@ import { Button, Card, CardContent, Typography } from "@mui/material";
 interface StatCardProps {
   title: string;
   value: number;
-  exportButton: any;
+  exportButton: () => Promise<void>;
 }
 
 const StatCard: React.FC<StatCardProps> = ({
@@ -34,10 +34,7 @@ const StatCard: React.FC<StatCardProps> = ({
           {value}
         </Typography>
       </CardContent>
-      <Button
-        onClick={handleExport}
-        sx={{  textAlign: "center" }}
-      >
+      <Button onClick={handleExport} sx={{ textAlign: "center" }}>
         Export
       </Button>
     </Card>
