@@ -19,6 +19,7 @@ import Diversity3Icon from "@mui/icons-material/Diversity3";
 import CakeIcon from "@mui/icons-material/Cake";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const drawerWidth = 240;
 
@@ -29,6 +30,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setIsMounted(true);
@@ -78,14 +80,28 @@ export default function Layout({ children }: LayoutProps) {
                 my: 0,
                 minHeight: 60,
                 color: "white",
+                backgroundColor: router.pathname === item.path ? "#333333" : "transparent",
                 "&:hover": {
                   backgroundColor: "#333333",
                 },
               }}
               onClick={handleDrawerToggle}
             >
-              <ListItemIcon sx={{ color: "#BB86FC" }}>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
+              <ListItemIcon 
+                sx={{ 
+                  color: router.pathname === item.path ? "#BB86FC" : "rgba(187, 134, 252, 0.7)"
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText 
+                primary={item.text} 
+                sx={{
+                  "& .MuiListItemText-primary": {
+                    color: router.pathname === item.path ? "#BB86FC" : "white",
+                  }
+                }}
+              />
             </ListItemButton>
           </Link>
         ))}
