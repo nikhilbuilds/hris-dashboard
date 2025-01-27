@@ -43,6 +43,13 @@ export default function Layout({ children }: LayoutProps) {
     setMobileOpen(!mobileOpen);
   };
 
+  const isActiveRoute = (path: string) => {
+    if (path === "/team-overview") {
+      return router.pathname === path || router.pathname === "/";
+    }
+    return router.pathname === path;
+  };
+
   const menuItems = [
     { icon: <Diversity3Icon />, text: "Team overview", path: "/team-overview" },
     {
@@ -80,26 +87,30 @@ export default function Layout({ children }: LayoutProps) {
                 my: 0,
                 minHeight: 60,
                 color: "white",
-                backgroundColor: router.pathname === item.path ? "#333333" : "transparent",
+                backgroundColor: isActiveRoute(item.path)
+                  ? "#333333"
+                  : "transparent",
                 "&:hover": {
                   backgroundColor: "#333333",
                 },
               }}
               onClick={handleDrawerToggle}
             >
-              <ListItemIcon 
-                sx={{ 
-                  color: router.pathname === item.path ? "#BB86FC" : "rgba(187, 134, 252, 0.7)"
+              <ListItemIcon
+                sx={{
+                  color: isActiveRoute(item.path)
+                    ? "#BB86FC"
+                    : "rgba(187, 134, 252, 0.7)",
                 }}
               >
                 {item.icon}
               </ListItemIcon>
-              <ListItemText 
-                primary={item.text} 
+              <ListItemText
+                primary={item.text}
                 sx={{
                   "& .MuiListItemText-primary": {
-                    color: router.pathname === item.path ? "#BB86FC" : "white",
-                  }
+                    color: isActiveRoute(item.path) ? "#BB86FC" : "white",
+                  },
                 }}
               />
             </ListItemButton>
