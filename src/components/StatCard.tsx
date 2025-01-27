@@ -20,7 +20,10 @@ const StatCard: React.FC<StatCardProps> = ({
         padding: "16px",
         backgroundColor: "#24212175",
         color: "white",
-        justifyItems: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100%",
       }}
     >
       <CardContent>
@@ -30,13 +33,17 @@ const StatCard: React.FC<StatCardProps> = ({
         >
           {title}
         </Typography>
-        <Typography variant="h4" sx={{ marginTop: "8px", textAlign: "center" }}>
+        <Typography
+          variant="h4"
+          sx={{
+            marginTop: "8px",
+            textAlign: "center",
+          }}
+        >
           {value}
         </Typography>
       </CardContent>
-      <Button onClick={handleExport} sx={{ textAlign: "center" }}>
-        Export
-      </Button>
+      <Button onClick={handleExport}>Export</Button>
     </Card>
   );
 };
