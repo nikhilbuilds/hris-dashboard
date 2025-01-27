@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
+import ExportButton from "./ExportButton";
 
 interface StatCardProps {
   title: string;
@@ -43,7 +44,10 @@ const StatCard: React.FC<StatCardProps> = ({
           {value}
         </Typography>
       </CardContent>
-      <Button onClick={handleExport}>Export</Button>
+      <ExportButton 
+        onClick={handleExport} 
+        label="Export"
+      />
     </Card>
   );
 };

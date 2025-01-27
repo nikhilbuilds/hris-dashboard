@@ -1,6 +1,5 @@
 import React from "react";
 import Grid2 from "@mui/material/Grid2";
-import { Button } from "@mui/material";
 import { getClient } from "@/lib/graphql/apollo-client";
 import { useRouter } from "next/router";
 import { Department, Employee } from "@/types/employee";
@@ -13,6 +12,7 @@ import { useGlobalLoader } from "@/context/LoaderContext";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { handleExport } from "@/lib/utils/exportHandler";
 import { GET_DEPARTMENT_LIST, GET_EMPLOYEES_ON_LEAVE } from "@/lib/graphql/queries";
+import ExportButton from "@/components/ExportButton";
 
 
 export const getServerSideProps: GetServerSideProps = async (
@@ -121,19 +121,11 @@ export default function EmployeesOnLeave(props: EmployeesOnLeaveProps) {
   return (
     <>
       <PageHeader title="Employees on leave today">
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "secondary.main",
-            color: "common.white",
-            "&:hover": {
-              backgroundColor: "secondary.dark",
-            },
-          }}
-          onClick={handleCSVExport}
-        >
-          Export as CSV
-        </Button>
+      <ExportButton 
+        onClick={handleCSVExport} 
+        variant="contained"
+        label="Export as CSV"
+      />
       </PageHeader>
       <Grid2
         container

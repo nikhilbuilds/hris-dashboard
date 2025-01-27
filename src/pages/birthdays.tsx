@@ -7,8 +7,8 @@ import { Birthday } from "@/types/birthday";
 import ErrorMessage from "@/components/ErrorMessage";
 import BirthdaysTable from "@/components/BirthdaysTable";
 import PageHeader from "@/components/PageHeader";
-import { Button } from "@mui/material";
 import { GET_BIRTHDAYS } from "@/lib/graphql/queries";
+import ExportButton from "@/components/ExportButton";
 
 
 export async function getServerSideProps() {
@@ -58,19 +58,12 @@ export default function Birthdays({ birthdays, error }: BirthdaysPageProps) {
   return (
     <div>
       <PageHeader title="Birthdays this week">
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "secondary.main",
-            color: "common.white",
-            "&:hover": {
-              backgroundColor: "secondary.dark",
-            },
-          }}
-          onClick={handleExport}
-        >
-          Export as CSV
-        </Button>
+      <ExportButton 
+        onClick={handleExport} 
+        variant="contained"
+        label="Export as CSV"
+      />
+
       </PageHeader>
       <Grid2 container>
         <BirthdaysTable birthdays={birthdays} />
