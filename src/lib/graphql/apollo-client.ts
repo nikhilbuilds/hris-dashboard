@@ -6,7 +6,7 @@ export const getClient = () => {
   if (!client || typeof window === "undefined") {
     client = new ApolloClient({
       link: new HttpLink({
-        uri: `${process.env.GRAPHQL_URI}/api/graphql`,
+        uri: `${process.env.NEXT_PUBLIC_API_URL}/api/graphql`,
       }),
       cache: new InMemoryCache(),
     });
