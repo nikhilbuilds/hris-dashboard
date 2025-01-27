@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   env: {
-    GRAPHQL_URI: process.env.GRAPHQL_URI,
+    NEXT_GRAPHQL_URI: process.env.NEXT_GRAPHQL_URI,
   },
 };
 
