@@ -72,7 +72,7 @@ export default function Layout({ children }: LayoutProps) {
           marginTop: isMobile ? 7 : 4,
         }}
       >
-        Cercli HRIS Dashboard
+        HRIS Dashboard
       </Typography>
       <List>
         {menuItems.map((item) => (
@@ -144,7 +144,7 @@ export default function Layout({ children }: LayoutProps) {
                 <MenuIcon />
               </IconButton>
             )}
-            <Typography variant="h6">Cercli HRIS</Typography>
+            <Typography variant="h6">HRIS Dashboard</Typography>
           </Toolbar>
         </AppBar>
       )}
